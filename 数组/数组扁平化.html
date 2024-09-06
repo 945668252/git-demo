@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+
+</body>
+<script>
+    /**数组扁平化的步骤
+     * 1.确定数组结构，如何识别父节点？比如flatArray2的0是特殊父节点
+     * 2.创建新的空数组，存储最终的树结构（结构需要自己创建）；创建临时对象，用于父对象多次赋值子元素
+     * 3.遍历，根据父节点信息把它们插入树的位置
+    */
+    const flatArray = [
+        { id: 1, name: "节点1", parentId: null },
+        { id: 2, name: "节点1-1", parentId: 1 },
+        { id: 3, name: "节点1-2", parentId: 1 },
+        { id: 4, name: "节点1-1-1", parentId: 2 },
+        { id: 5, name: "节点2", parentId: null },
+        // ... 更多节点
+    ];
+    const flatArray2 = [
+        { id: 1, parentId: 0, },
+        { id: 2, parentId: 1, },
+        { id: 3, parentId: 1, },
+        { id: 4, parentId: 2, },
+        { id: 5, parentId: 2, },
+        { id: 6, parentId: 3, },
+        { id: 7, parentId: null, },
+    ]
+    //基础概念:不好，需要指定根节点的条件，应该是数组中找不到的即为根节点
+    //所以稍微改造下：【拿到当前节点的父节点的信息】
+    function divideTree(items){
+        const rootItems = [];//最终返回值
+        const lookup = {};//临时存放值:父节点需要多次添加子元素
+
+        for(let item of items){
+            const itemid = item.id;
+            const parentId = items.find(r=>r.id === item.parentId)?.id;//拿到当前节点的父节点的信息
+            // const parentId = item.parentId;
+
+            if(!lookup[itemid]) lookup[itemid] = {[itemid]:item,children:[]};
+
+            const treeItem = lookup[itemid];
+            if(!parentId){//根节点:parentId == undefined || parentId == null
+                rootItems.push(treeItem);
+            }else {//子节点:要拿父节点的id对象来添加,怎么记住这个父节点的对象？如果需要添加很多次？所以需要lookup临时对象
+                if(!lookup[parentId]) lookup[parentId] = {[parentId]:item,children:[]};
+                lookup[parentId].children.push(treeItem);
+            }
+        }
+        return rootItems;
+    }
+    //更厉害的写法
+    function divideTreeOther(list){
+        const arr = list.filter(cur=>{
+            const parItem = list.find(l=>l.id === cur.parentId);//拿到当前节点的父节点信息
+            console.log(JSON.parse(JSON.stringify(list)),'g2');
+            if(!parItem) return true;//没有父节点信息，直接返回
+            if(!Array.isArray(parItem.children)) parItem.children = [];//解决父对象临时存放值的问题，因为在for循环中
+            parItem.children.push(cur);//为什么每次新的parItem可以保存值？因为find方法是浅拷贝，parItem是对象地址的引用。
+            return false;
+        })
+        return arr;
+    }
+    // console.log(divideTree(flatArray),'实验1')
+    // console.log(divideTree(flatArray2),'实验1')
+    console.log(divideTreeOther(flatArray2),'实验1')
+
+</script>
+
+</html>

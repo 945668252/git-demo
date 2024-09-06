@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    
+</body>
+<script>
+    const p1 = new Promise((resolve,reject)=>{
+    setTimeout(() => {
+        console.log('p1完成')
+        resolve('p1结果')
+    }, 1000);
+    })
+    p1.then(()=>console.log(99)
+    )
+    const p2 = new Promise((resolve,reject)=>{
+        setTimeout(() => {
+        resolve('p2结果')
+        }, 2000);
+    })
+    //顺序执行Promise
+    const orderPromise = multData => {
+       return multData.reduce((pre,next)=>{
+            console.log(1111111)
+            pre.then(()=>next())
+        },Promise.resolve())
+    }
+    orderPromise([
+        ()=>new Promise().resolve('first'),
+        ()=>new Promise().resolve('second'),
+        // new Promise().resolve('first'),
+        // new Promise().resolve('second'),
+        // new Promise().resolve('third'),
+    ]).then((res)=>console.log(res))
+</script>
+</html>
