@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>       
+</body>
+<script>
+    /**
+     * 返回值是Promise对象
+     * 考虑边界值：数据为空直接返回空数组，maxnum大于数组长度，应取数组长度
+     * 要定义count计数器，判断请求是否全部完成
+    */
+    function controlRequest(urls,maxnum){
+        return new Promise((resolve,reject)=>{
+            if(urls.length == 0){
+                resolve([]);
+                return;//Promise状态已确定，不会打断代码的执行
+            }
+            let count = 0;
+            let result = [];
+            async function __request(url) {
+                
+                await fetch(url)
+            }
+        })
+    }
+
+    const urls = [];
+    for (let i = 1; i <= 20; i++) {
+        urls.push(`https://jsonplaceholder.typicode.com/todos/${i}`);
+    }
+    // controlRequest(urls, 3).then(res => {console.log(res)})
+
+    const a = Promise.resolve('aa');
+    async function test(){
+        let b = await a;
+        console.log(b)
+    }
+    test();
+
+</script>
+</html>
